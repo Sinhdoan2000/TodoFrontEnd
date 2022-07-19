@@ -41,8 +41,10 @@ function App() {
                 return data;
             })
             .then(function(data){
-                setDataRender(data);
-                setRootData(data);
+                if(data){
+                    setDataRender(data);
+                    setRootData(data);
+                }
             })
 
     }
