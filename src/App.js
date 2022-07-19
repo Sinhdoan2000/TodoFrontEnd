@@ -33,7 +33,7 @@ function App() {
 
 /*  get Json từ API  */
     const handleGetAPI = ()=>{
-        var todoApi = 'http://127.0.0.1:8000/api/todo';
+        var todoApi = 'http://127.0.0.1:8003/todo/api';
     
         axios.get(todoApi)
             .then(function(res){
@@ -82,7 +82,7 @@ function App() {
 
 /* Xử lý xoá dữ liệu API */
     async function handleDeleteAPI(id){ 
-        var url = `http://127.0.0.1:8000/delete/${id}`;
+        var url = `http://127.0.0.1:8003/todo/delete/${id}`;
         axios.delete(url)
         handleDeleteFromClient(id)
     }
@@ -98,7 +98,7 @@ function App() {
                 updated_at: date.toString()       
             }
             
-        postData('http://127.0.0.1:8000/api/todo', newJob)
+        postData('http://127.0.0.1:8003/todo/api', newJob)
         rootData.push(newJob);
 
     }
@@ -114,7 +114,7 @@ function App() {
             setIsWarning(false);
             let ID = rootData.length > 0 ? rootData[rootData.length - 1].ID + 1 : 1;
 
-            handleCreateAPI(ID, 'false', addValue)                
+            handleCreateAPI(ID, 0, addValue)                
             setRootData(rootData);
             setDataRender(rootData);
             setAddValue("");
@@ -151,7 +151,7 @@ function App() {
                 TITLE: valueUpdate,
                 updated_at: currentDate  
             }
-            updateData(`http://127.0.0.1:8000/update/${dataUpdate.ID}`, data)
+            updateData(`http://127.0.0.1:8003/todo/update/${dataUpdate.ID}`, data)
             reRenderData(dataUpdate.ID, currentDate)
         }
     }
@@ -191,14 +191,14 @@ function App() {
                 break;
             case 'Active':
                 const dataActives = rootData.filter(item => {
-                    return item.STATUS === "false";
+                    return !item.STATUS;
                 })
     
                 setDataRender(dataActives);   
                 break;
             default:
                 const dataCompleted = rootData.filter(item => {
-                    return item.STATUS === "true";
+                    return item.STATUS;
                 })
     
                 setDataRender(dataCompleted);
@@ -217,7 +217,7 @@ function App() {
         switch(tabs){
             case 'Active':
                     const dataActives = rootData.filter(item => {
-                        return item.STATUS === "false";
+                        return !item.STATUS;
                     })
                     setIsWarning(false);
                     setDataRender(dataActives);
@@ -225,7 +225,7 @@ function App() {
 
             case 'Completed':
                     const dataCompleted = rootData.filter(item => {
-                        return item.STATUS === "true";
+                        return item.STATUS;
                     })
                     setIsWarning(false);
                     setDataRender(dataCompleted);
@@ -250,18 +250,18 @@ function App() {
             updated_at: currentDate   
         }
         
-        updateData(`http://127.0.0.1:8000/update/${id}`, updateJob)
+        updateData(`http://127.0.0.1:8003/todo/update/${id}`, updateJob)
 
     }
 
 /* Xử lý khi change checkbox thì cập nhập data. */
     const handleIsChecked = (e, job) =>{   
 
-        e.target.checked ? job.STATUS = "true" : job.STATUS = "false"; 
+        e.target.checked ? job.STATUS = 1 : job.STATUS = 0; 
 
         rootData.forEach(item=>{
             if(item.ID === job.ID){
-                e.target.checked ? item.STATUS = "true" : item.STATUS = "false";
+                e.target.checked ? item.STATUS = 1 : item.STATUS = 0;
             }
         })
 
@@ -366,7 +366,7 @@ function App() {
                                         <input type="checkbox" 
                                             id={"Globo-checkbox-" + job.ID}
                                             className="Globo-checkboxJob" 
-                                            checked={job.STATUS === "true" ? true : false}
+                                            checked={!!job.STATUS}
                                             onChange={e => handleIsChecked(e, job)}
                                             onClick={() => setIsChecked(!isChecked)}
                                         />
