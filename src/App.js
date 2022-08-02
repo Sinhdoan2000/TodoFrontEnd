@@ -350,7 +350,7 @@ function App() {
                                 onKeyUp={e => handleUpdateData(e)}
                             />}
 
-                            {!isSearch && !isUpdate && isWarning && <p style={{ margin: '5px 10px', color: 'red'}}>This job was exists!</p>}
+                            {!isSearch && !isUpdate && isWarning && <p style={{ margin: '5px 10px', color: 'red'}}>This job already exists!</p>}
                             {isSearch && !isUpdate && <input type="text" 
                                 id="Globo-input_search" 
                                 placeholder='Search' 
